@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "3ef5N4mm3pC4iO4qJ5cICza6fyL1fkAVIFKO2/cb1zSEQqpTJVW0B0gj7OC/zCLMcw2mO2XKyR4Rsonz2l69TA==",
+  "success": true,
+  "projectFilePath": "D:\\GG PROGRAMIST\\All_project_c#\\DockClientApp\\DockClientApp\\DockClientApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\andre\\.nuget\\packages\\aspose.cells\\24.6.0\\aspose.cells.24.6.0.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\system.formats.asn1\\6.0.0\\system.formats.asn1.6.0.0.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\system.security.cryptography.pkcs\\6.0.3\\system.security.cryptography.pkcs.6.0.3.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\system.text.encoding.codepages\\4.7.0\\system.text.encoding.codepages.4.7.0.nupkg.sha512"
+  ],
+  "logs": []
+}
