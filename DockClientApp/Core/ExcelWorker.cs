@@ -2,15 +2,18 @@
 using DockClientApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace DockClientApp.Core
 {
     public class ExcelWorker
     {
         private List<string> _nameOfExcel;
+        private List<string> _nameOfColumn;
 
         private List<Document> _expList;
 
@@ -22,6 +25,19 @@ namespace DockClientApp.Core
 
         public ExcelWorker()
         {
+            _nameOfColumn = new List<string>()
+            {
+                "Название факультета",
+                "Год",
+                "Направление",
+                "Авторы",
+                "Название публикации",
+                "Место",
+                "Руководитель эксп. компании",
+                "Эксперты",
+                "Срок полномочий"
+            };
+
             _nameOfExcel = new List<string>()
             {
                 "2_Состав экспертных групп_2020-2023",
@@ -43,6 +59,87 @@ namespace DockClientApp.Core
             _iffDocuments = new();
         }
 
+
+        public void FormNewDoc(List<Document> docs, string direction)
+        {
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            for (int row = 0; row < docs.Count + 1; row++)
+            {
+                for (int col = 0; col <= 8 ; col++)
+                {
+                    Cell cell;
+
+                    if (row == 0)
+                    {
+                        cell = worksheet.Cells[row, col];
+                        Style style = cell.GetStyle();
+                        style.Pattern = BackgroundType.Solid;
+                        style.ForegroundColor = Color.Green;
+                        style.Font.Color = Color.White;
+                        style.Font.IsBold = true;
+                        style.HorizontalAlignment = TextAlignmentType.Center;
+                        cell.SetStyle(style);
+                        switch (col)
+                        {
+                            case 0:
+                                cell.PutValue(_nameOfColumn[col]); break;
+                            case 1:
+                                cell.PutValue(_nameOfColumn[col]); break;
+                            case 2:
+                                cell.PutValue(_nameOfColumn[col]); break;
+                            case 3:
+                                cell.PutValue(_nameOfColumn[col]); break;
+                            case 4:
+                                cell.PutValue(_nameOfColumn[col]); break;
+                            case 5:
+                                cell.PutValue(_nameOfColumn[col]); break;
+                            case 6:
+                                cell.PutValue(_nameOfColumn[col]); break;
+                            case 7:
+                                cell.PutValue(_nameOfColumn[col]); break;
+                            case 8:
+                                cell.PutValue(_nameOfColumn[col]); break;
+                            default:
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        cell = worksheet.Cells[row, col];
+
+                        var doc = docs[row-1];
+
+                        switch (col)
+                        {
+                            case 0:
+                                cell.PutValue(doc.NameOfDirection); break;
+                            case 1:
+                                cell.PutValue(doc.Year); break;
+                            case 2:
+                                cell.PutValue(doc.WorkDirection); break;
+                            case 3:
+                                cell.PutValue(doc.Authors); break;
+                            case 4:
+                                cell.PutValue(doc.NameOfPublication); break;
+                            case 5:
+                                cell.PutValue(doc.Place); break;
+                            case 6:
+                                cell.PutValue($"{doc.MainFio} - {doc.Post}"); break;
+                            case 7:
+                                cell.PutValue(doc.Group); break;
+                            case 8:
+                                cell.PutValue(doc.Period); break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+
+            workbook.Save($"{direction}Отформатированные данные.xlsx");
+        }
 
         public List<Document> ReadDataFromExcel(string path)
         {

@@ -26,3 +26,5 @@ D:\GG PROGRAMIST\All_project_c#\DockClientApp\DockClientApp\obj\Debug\net7.0-win
 D:\GG PROGRAMIST\All_project_c#\DockClientApp\DockClientApp\obj\Debug\net7.0-windows\Interop.Microsoft.Office.Interop.Word.dll
 D:\GG PROGRAMIST\All_project_c#\DockClientApp\DockClientApp\obj\Debug\net7.0-windows\DockClientApp.csproj.ResolveComReference.cache
 D:\GG PROGRAMIST\All_project_c#\DockClientApp\DockClientApp\obj\Debug\net7.0-windows\DockClientApp.csproj.CopyComplete
+D:\GG PROGRAMIST\All_project_c#\DockClientApp\DockClientApp\bin\Debug\net7.0-windows\Assets\Template\TemplateFor2.rtf
+D:\GG PROGRAMIST\All_project_c#\DockClientApp\DockClientApp\bin\Debug\net7.0-windows\Assets\Template\TemplateFor1.rtf

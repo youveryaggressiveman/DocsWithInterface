@@ -1,4 +1,5 @@
 ﻿using Accessibility;
+using Aspose.Cells.Drawing;
 using DockClientApp.Command;
 using DockClientApp.Core;
 using DockClientApp.Model;
@@ -23,12 +24,15 @@ namespace DockClientApp.ViewModel
 
         private bool _isFinished = true;
         private bool _isStarted = false;
+        private bool _isReadyToForm = false;
 
         private string[] _templates;
         private string _createString;
         private string _path;
         private int _count;
 
+        private Task _threadFor1;
+        private Task _threadFor2;
         private Task _threadFor3;
         private Task _threadFor4;
         private Task _threadFor5;
@@ -39,6 +43,16 @@ namespace DockClientApp.ViewModel
 
         private ExcelWorker _excel;
         private WordWorker _word;
+
+        public bool IsReadyToForm
+        {
+            get => _isReadyToForm;
+            set
+            {
+                _isReadyToForm = value;
+                OnPropertyChanged(nameof(IsReadyToForm));
+            }
+        }
 
         public bool IsStarted
         {
@@ -101,23 +115,39 @@ namespace DockClientApp.ViewModel
         public ICommand LoadFiles { get; }
         public ICommand CreateDoc { get; }
         public ICommand StopDoc { get; }
+        public ICommand FormReport { get; }
         public MainWindowViewModel()
         {
-            _templates = new string[] { "Assets/Template/TemplateFor3.rtf", "Assets/Template/TemplateFor4.rtf", "Assets/Template/TemplateFor5.rtf" };
+            _templates = new string[] { "Assets/Template/TemplateFor2.rtf", "Assets/Template/TemplateFor1.rtf", "Assets/Template/TemplateFor3.rtf", "Assets/Template/TemplateFor4.rtf", "Assets/Template/TemplateFor5.rtf" };
 
             ListOfDocument = new ObservableCollection<Document>();
 
             _timer = new System.Timers.Timer(5000);
 
             _excel = new ExcelWorker();
-            _word = new WordWorker(_templates, @"C:\ExpFiles\");
+            _word = new WordWorker(_templates, @"C:\ExpFiles\", new string[] {@"ЕСТ\", @"ИФФ\", @"ФАМИКОН\"});
 
             CreateString = string.Empty;
             Count = ListOfDocument.Count;
 
+            FormReport = new DelegateCommand(Form);
             StopDoc = new DelegateCommand(Stop);
             CreateDoc = new DelegateCommand(Create);
             LoadFiles = new DelegateCommand(Load);
+        }
+
+        private void Form(object obj)
+        {
+            try
+            {
+                _excel.FormNewDoc(ListOfDocument.ToList(), @"C:\ExpFiles\");
+
+                MessageBox.Show("Таблица успешна сформирована!", "Успех");
+            }
+            catch
+            {
+                MessageBox.Show("При формировании таблицы произошла ошибка. Повторите попытку позже", "Ошибка");
+            }
         }
 
         private void Stop(object obj)
@@ -139,7 +169,7 @@ namespace DockClientApp.ViewModel
 
                 try
                 {
-                    Task.WaitAll(_threadFor3, _threadFor4, _threadFor5);
+                    Task.WaitAll(_threadFor1, _threadFor2, _threadFor3, _threadFor4, _threadFor5);
                 }
                 catch 
                 {
@@ -151,7 +181,9 @@ namespace DockClientApp.ViewModel
             }
             finally
             {
-                CreateString += "\nСоздание документов было прервано\n\n";
+                var result = WordWorker.S_CreatedDoc;
+                CreateString += $"{result.Count}/{Count} документов создано\n\nСоздание документов было прервано\n\n";
+
                 IsFinshed = true;
                 IsStarted = false;
             }
@@ -160,6 +192,8 @@ namespace DockClientApp.ViewModel
         {
             List<List<Document>> filtredList = new()
             {
+                new List<Document>(),
+                new List<Document>(),
                 new List<Document>(),
                 new List<Document>(),
                 new List<Document>()
@@ -178,23 +212,47 @@ namespace DockClientApp.ViewModel
                     }
                 }
 
+                
+                var oldExperts = doc.Group.Split("; ");
+                doc.Group = string.Empty;
+
+                foreach (var expert in oldExperts)
+                {
+                    var data = expert.Split(" - ");
+
+                    if (!doc.Authors.Contains(data[0]))
+                    {
+                        doc.Group += $"{expert}; ";
+                    }
+                }
+
                 var experts = doc.Group.Split("; ");
 
-                if (experts.Length == 4)
+                if (experts.Length == 2)
                 {
                     filtredList[0].Add(doc);
                 }
-                else if (experts.Length == 5)
+                else if (experts.Length == 3)
                 {
                     filtredList[1].Add(doc);
                 }
-                else if (experts.Length == 6)
+                else if (experts.Length == 4)
                 {
                     filtredList[2].Add(doc);
+                }
+                else if (experts.Length == 5)
+                {
+                    filtredList[3].Add(doc);
+                }
+                else if (experts.Length == 6)
+                {
+                    filtredList[4].Add(doc);
                 }
             LoopEnd: continue;
 
             }
+
+            ListOfDocument = allDoc;
 
             return filtredList;
         }
@@ -236,10 +294,14 @@ namespace DockClientApp.ViewModel
                 _cancelTokenSource = new CancellationTokenSource();
                 CancellationToken token = _cancelTokenSource.Token;
 
-                _threadFor3 = new Task(() => _word.Proccess(filtredList[0], "TemplateFor3.rtf", 3, token), token);
-                _threadFor4 = new Task(() => _word.Proccess(filtredList[1], "TemplateFor4.rtf", 4, token), token);
-                _threadFor5 = new Task(() => _word.Proccess(filtredList[2], "TemplateFor5.rtf", 5, token), token);
+                _threadFor1 = new Task(() => _word.Proccess(filtredList[0], "TemplateFor1.rtf", 1, token), token);
+                _threadFor2 = new Task(() => _word.Proccess(filtredList[1], "TemplateFor2.rtf", 2, token), token);
+                _threadFor3 = new Task(() => _word.Proccess(filtredList[2], "TemplateFor3.rtf", 3, token), token);
+                _threadFor4 = new Task(() => _word.Proccess(filtredList[3], "TemplateFor4.rtf", 4, token), token);
+                _threadFor5 = new Task(() => _word.Proccess(filtredList[4], "TemplateFor5.rtf", 5, token), token);
 
+                _threadFor1.Start();
+                _threadFor2.Start();
                 _threadFor3.Start();
                 _threadFor4.Start();
                 _threadFor5.Start();
@@ -286,6 +348,21 @@ namespace DockClientApp.ViewModel
             }
             try
             {
+                if(ListOfDocument.Count != 0)
+                {
+                    var result = MessageBox.Show("Вы точно хотите обноваить список данных?", "Вопрос", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        WordWorker.S_CreatedDoc = new List<Document>();
+                        WordWorker.S_SdditionName = 1;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+
                 ListOfDocument.Clear();
 
                 var listOfDocument = _excel.ReadDataFromExcel(Path);
@@ -293,6 +370,8 @@ namespace DockClientApp.ViewModel
                 listOfDocument.ForEach(ListOfDocument.Add);
 
                 MessageBox.Show("Все данные из файлов успешно получены", "Успех");
+
+                CreateString += $"Новые данные для создания документов получены\n\n";
             }
             catch
             {
@@ -301,6 +380,15 @@ namespace DockClientApp.ViewModel
             finally
             {
                 Count = ListOfDocument.Count;
+
+                if(Count != 0)
+                {
+                    IsReadyToForm = true;
+                }
+                else
+                {
+                    IsReadyToForm = false;
+                }
             }
 
         }

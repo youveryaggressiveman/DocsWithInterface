@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Office.Interop.Word;
 using System.Threading;
+using System.Windows;
 
 namespace DockClientApp.Core
 {
@@ -15,14 +16,16 @@ namespace DockClientApp.Core
     {
         public static List<Model.Document> S_CreatedDoc = new();
 
-        private static int s_additionName = 1;
+        public static int S_SdditionName = 1;
 
+        private List<DirectoryInfo> _foldersInfo;
         private List<FileInfo> _filesInfo;
         private DirectoryInfo _direct;
 
-        public WordWorker(string[] filesName, string direct)
+        public WordWorker(string[] filesName, string direct, string[] foldersName)
         {
             _filesInfo = new List<FileInfo>();
+            _foldersInfo = new List<DirectoryInfo>();
 
             if (Directory.Exists(direct))
             {
@@ -31,6 +34,22 @@ namespace DockClientApp.Core
             else
             {
                 Directory.CreateDirectory(direct);
+
+                _direct = new DirectoryInfo(direct);
+            }
+
+            foreach (var folder in foldersName)
+            {
+                if (Directory.Exists($"{direct}{folder}"))
+                {
+                    _foldersInfo.Add(new DirectoryInfo($"{direct}{folder}"));
+                }
+                else
+                {
+                    Directory.CreateDirectory($"{direct}{folder}");
+
+                    _foldersInfo.Add(new DirectoryInfo($"{direct}{folder}"));
+                }
             }
 
             foreach (var file in filesName)
@@ -49,7 +68,12 @@ namespace DockClientApp.Core
 
         public void Proccess(List<Model.Document> documents, string type, int countOfRepeat, CancellationToken token)
         {
-           foreach (var document in documents) 
+            if (documents.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var document in documents)
             {
                 if (token.IsCancellationRequested)
                 {
@@ -72,7 +96,6 @@ namespace DockClientApp.Core
                     { "<POST>", document.Post},
                     { "<MAIN_FIO>", document.MainFio},
                     { "<GROUP>", document.Group},
-                    { "<PERIOD>", document.Period},
                     { "<NAME_OF_PUBLICATION>", document.NameOfPublication },
                     { "<PLACE>", document.Place},
                     { "<AUTHORS>", document.Authors }
@@ -142,13 +165,23 @@ namespace DockClientApp.Core
                 string newNameOfDirection = Regex.Replace(document.NameOfDirection, @"[\\/:*?""<>|+\s.]", "");
                 string newNameOfPublication = Regex.Replace(document.NameOfPublication, @"[\\/:*?""<>|+.]", "");
 
-                Object newFileName = Path.Combine(_direct.FullName, $"{document.Year}_{newNameOfDirection}_{newAuthors}_{s_additionName}.rtf");
-                app.ActiveDocument.SaveAs2(newFileName);
-                app.ActiveDocument.Close();
-                app.Quit();
+                foreach (var folder in _foldersInfo)
+                {
+                    if (folder.Name.Contains(document.NameOfDirection))
+                    {
+                        var currentFolder = Directory.CreateDirectory($@"{folder.FullName}/{document.Year}_{newNameOfDirection}_{newAuthors}_{S_SdditionName}");
+
+                        Object newFileName = Path.Combine(currentFolder.FullName, "Заключение экспертной группы.rtf");
+                        app.ActiveDocument.SaveAs2(newFileName);
+                        app.ActiveDocument.Close();
+                        app.Quit();
+
+                        break;
+                    }
+                }
 
                 S_CreatedDoc.Add(document);
-                s_additionName++;
+                S_SdditionName++;
             }
             catch (Exception ex)
             {
@@ -156,11 +189,19 @@ namespace DockClientApp.Core
             }
             finally
             {
-                app?.Quit();
+                try
+                {
+                    app?.Quit();
+                }
+                catch
+                {
+
+                }
+                
             }
         }
 
-        private void AddBigData(string findText, string replaceWith, Application app)
+        private void AddBigData(string findText, string replaceWith, Word.Application app)
         {
             while (replaceWith.Length > 255)
             {

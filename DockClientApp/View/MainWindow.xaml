@@ -46,17 +46,29 @@
                     VerticalAlignment="Top"
                     Margin="15 0 0 0"
                     Orientation="Vertical">
-                <TextBlock
-                           FontSize="18"
-                    >
-                    <Run Text="Общее количество файлов:"/>
-                    <Run Text="{Binding Count, Mode=OneWay}"
-                         FontWeight="SemiBold"/>
-                </TextBlock>
+                <StackPanel Orientation="Horizontal"
+                            >
+                    <TextBlock
+           FontSize="18"
+                        VerticalAlignment="Center"
+    >
+    <Run Text="Общее количество файлов:"/>
+    <Run Text="{Binding Count, Mode=OneWay}"
+         FontWeight="SemiBold"/>
+                    </TextBlock>
+                    <Button FontSize="18"
+                            HorizontalAlignment="Right"
+                    IsEnabled="{Binding IsReadyToForm}"
+Command="{Binding FormReport}"
+Margin="10"
+Padding="5"
+Content="Сформировать таблицу данных"/>
+                </StackPanel>
                 <Border CornerRadius="5"
                         BorderThickness="0.4"
                         BorderBrush="Black">
                     <TextBlock  FontSize="15"
+                                Margin="5"
             
             Text="{Binding CreateString, Mode=OneWay}"/>
                 </Border>

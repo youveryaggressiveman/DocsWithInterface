@@ -26,3 +26,5 @@ D:\GG PROGRAMIST\All_project_c#\DockClientApp\DockClientApp\obj\Release\net7.0-w
 D:\GG PROGRAMIST\All_project_c#\DockClientApp\DockClientApp\obj\Release\net7.0-windows\DockClientApp.pdb
 D:\GG PROGRAMIST\All_project_c#\DockClientApp\DockClientApp\obj\Release\net7.0-windows\DockClientApp.genruntimeconfig.cache
 D:\GG PROGRAMIST\All_project_c#\DockClientApp\DockClientApp\obj\Release\net7.0-windows\ref\DockClientApp.dll
+D:\GG PROGRAMIST\All_project_c#\DockClientApp\DockClientApp\bin\Release\net7.0-windows\Assets\Template\TemplateFor1.rtf
+D:\GG PROGRAMIST\All_project_c#\DockClientApp\DockClientApp\bin\Release\net7.0-windows\Assets\Template\TemplateFor2.rtf
