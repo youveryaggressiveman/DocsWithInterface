@@ -140,6 +140,8 @@ namespace DockClientApp.ViewModel
         {
             try
             {
+                Filter(ListOfDocument);
+
                 _excel.FormNewDoc(ListOfDocument.ToList(), @"C:\ExpFiles\");
 
                 MessageBox.Show("Таблица успешна сформирована!", "Успех");

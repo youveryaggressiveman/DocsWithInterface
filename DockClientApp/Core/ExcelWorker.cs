@@ -32,6 +32,7 @@ namespace DockClientApp.Core
                 "Направление",
                 "Авторы",
                 "Название публикации",
+                "Дата публикации",
                 "Место",
                 "Руководитель эксп. компании",
                 "Эксперты",
@@ -67,7 +68,7 @@ namespace DockClientApp.Core
 
             for (int row = 0; row < docs.Count + 1; row++)
             {
-                for (int col = 0; col <= 8 ; col++)
+                for (int col = 0; col <= 9 ; col++)
                 {
                     Cell cell;
 
@@ -101,6 +102,8 @@ namespace DockClientApp.Core
                                 cell.PutValue(_nameOfColumn[col]); break;
                             case 8:
                                 cell.PutValue(_nameOfColumn[col]); break;
+                            case 9:
+                                cell.PutValue(_nameOfColumn[col]); break;
                             default:
                                 break;
                         }
@@ -110,6 +113,58 @@ namespace DockClientApp.Core
                         cell = worksheet.Cells[row, col];
 
                         var doc = docs[row-1];
+
+                        if(doc.DateOfPublication == null)
+                        {
+                            if ((doc.Place.ToLower().Contains("янв.") || doc.Place.ToLower().Contains("jan.")) && doc.DateOfPublication == null)
+                            {
+                                doc.DateOfPublication = "Январь";
+                            }
+                            else if ((doc.Place.ToLower().Contains("февр") || doc.Place.ToLower().Contains("feb")) && doc.DateOfPublication == null)
+                            {
+                                doc.DateOfPublication = "Февраль";
+                            }
+                            else if ((doc.Place.ToLower().Contains("март") || doc.Place.ToLower().Contains("mar")) && doc.DateOfPublication == null)
+                            {
+                                doc.DateOfPublication = "Март";
+                            }
+                            else if ((doc.Place.ToLower().Contains("апр") || doc.Place.ToLower().Contains("apr")) && doc.DateOfPublication == null)
+                            {
+                                doc.DateOfPublication = "Апрель";
+                            }
+                            else if ((doc.Place.ToLower().Contains("май") || doc.Place.ToLower().Contains("маz") || doc.Place.ToLower().Contains("may")) && !doc.Place.ToLower().Contains("майкоп") && doc.DateOfPublication == null)
+                            {
+                                doc.DateOfPublication = "Май";
+                            }
+                            else if ((doc.Place.ToLower().Contains("июн") || doc.Place.ToLower().Contains("jun")) && doc.DateOfPublication == null)
+                            {
+                                doc.DateOfPublication = "Июнь";
+                            }
+                            else if ((doc.Place.ToLower().Contains("июл") || doc.Place.ToLower().Contains("jul")) && doc.DateOfPublication == null)
+                            {
+                                doc.DateOfPublication = "Июль";
+                            }
+                            else if ((doc.Place.ToLower().Contains("авг") || doc.Place.ToLower().Contains("aug")) && doc.DateOfPublication == null)
+                            {
+                                doc.DateOfPublication = "Август";
+                            }
+                            else if ((doc.Place.ToLower().Contains("сент") || doc.Place.ToLower().Contains("sep")) && doc.DateOfPublication == null)
+                            {
+                                doc.DateOfPublication = "Сентябрь";
+                            }
+                            else if ((doc.Place.ToLower().Contains("окт") || doc.Place.ToLower().Contains("oct")) && doc.DateOfPublication == null)
+                            {
+                                doc.DateOfPublication = "Октябрь";
+                            }
+                            else if ((doc.Place.ToLower().Contains("нояб") || doc.Place.ToLower().Contains("nov")) && doc.DateOfPublication == null)
+                            {
+                                doc.DateOfPublication = "Ноябрь";
+                            }
+                            else if ((doc.Place.ToLower().Contains("дек") || doc.Place.ToLower().Contains("dec")) && doc.DateOfPublication == null)
+                            {
+                                doc.DateOfPublication = "Декабрь";
+                            }
+                        }
 
                         switch (col)
                         {
@@ -124,12 +179,14 @@ namespace DockClientApp.Core
                             case 4:
                                 cell.PutValue(doc.NameOfPublication); break;
                             case 5:
-                                cell.PutValue(doc.Place); break;
+                                cell.PutValue(doc.DateOfPublication); break;
                             case 6:
-                                cell.PutValue($"{doc.MainFio} - {doc.Post}"); break;
+                                cell.PutValue(doc.Place); break;
                             case 7:
-                                cell.PutValue(doc.Group); break;
+                                cell.PutValue($"{doc.MainFio} - {doc.Post}"); break;
                             case 8:
+                                cell.PutValue(doc.Group); break;
+                            case 9:
                                 cell.PutValue(doc.Period); break;
                             default:
                                 break;
@@ -269,6 +326,7 @@ namespace DockClientApp.Core
                                     Group = document.Group,
                                     Period = document.Period,
                                     WorkDirection = document.WorkDirection,
+                                    DateOfPublication = iff.DateOfPublication,
                                     NameOfDirection = iff.NameOfDirection,
                                     NameOfPublication = iff.NameOfPublication,
                                     Place = iff.Place,
@@ -292,6 +350,7 @@ namespace DockClientApp.Core
                                     Group = document.Group,
                                     Period = document.Period,
                                     WorkDirection = document.WorkDirection,
+                                    DateOfPublication = est.DateOfPublication,
                                     NameOfDirection = est.NameOfDirection,
                                     NameOfPublication = est.NameOfPublication,
                                     Place = est.Place,
@@ -314,6 +373,7 @@ namespace DockClientApp.Core
                                     Group = document.Group,
                                     Period = document.Period,
                                     WorkDirection = document.WorkDirection,
+                                    DateOfPublication = fam.DateOfPublication,
                                     NameOfDirection = fam.NameOfDirection,
                                     NameOfPublication = fam.NameOfPublication,
                                     Place = fam.Place,
@@ -345,6 +405,7 @@ namespace DockClientApp.Core
                                     Group = newGroup,
                                     Period = document.Period,
                                     WorkDirection = document.WorkDirection,
+                                    DateOfPublication = est.DateOfPublication,
                                     NameOfDirection = est.NameOfDirection,
                                     NameOfPublication = est.NameOfPublication,
                                     Place = est.Place,
@@ -375,6 +436,7 @@ namespace DockClientApp.Core
                                     Group = newGroup,
                                     Period = document.Period,
                                     WorkDirection = document.WorkDirection,
+                                    DateOfPublication = fam.DateOfPublication,
                                     NameOfDirection = fam.NameOfDirection,
                                     NameOfPublication = fam.NameOfPublication,
                                     Place = fam.Place,
@@ -404,6 +466,7 @@ namespace DockClientApp.Core
                                     Group = newGroup,
                                     Period = document.Period,
                                     WorkDirection = document.WorkDirection,
+                                    DateOfPublication = iff.DateOfPublication,
                                     NameOfDirection = iff.NameOfDirection,
                                     NameOfPublication = iff.NameOfPublication,
                                     Place = iff.Place,
@@ -453,6 +516,14 @@ namespace DockClientApp.Core
                         {
                             columnList.Add(col, cellValue);
                         }
+                        else if (cellValue == "Дата начала проведения")
+                        {
+                            columnList.Add(col, cellValue);
+                        }
+                        else if (cellValue == "Дата окончания проведения")
+                        {
+                            columnList.Add(col, cellValue);
+                        }
                         else if (cellValue == "Город проведения")
                         {
                             columnList.Add(col, cellValue);
@@ -476,6 +547,12 @@ namespace DockClientApp.Core
                                     break;
                                 case "Ф.И.О.":
                                     document.Authors = worksheet.Cells[row, col.Key].StringValue;
+                                    break;
+                                case "Дата начала проведения":
+                                    document.DateOfPublication += $"{worksheet.Cells[row, col.Key].StringValue} - ";
+                                    break;
+                                case "Дата окончания проведения":
+                                    document.DateOfPublication += worksheet.Cells[row, col.Key].StringValue;
                                     break;
                                 case "Город проведения":
                                     document.Place = worksheet.Cells[row, col.Key].StringValue;

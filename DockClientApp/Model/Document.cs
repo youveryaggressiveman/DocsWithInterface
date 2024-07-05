@@ -12,6 +12,7 @@ namespace DockClientApp.Model
         public string MainFio { get; set; }
         public string Group { get; set; }
         public string Period { get; set; }
+        public string DateOfPublication { get; set; }
         public string NameOfPublication { get; set; }
         public string Place { get; set; }
         public string NameOfDirection { get; set; }
