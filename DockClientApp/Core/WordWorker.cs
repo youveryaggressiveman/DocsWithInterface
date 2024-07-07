@@ -96,6 +96,7 @@ namespace DockClientApp.Core
                     { "<POST>", document.Post},
                     { "<MAIN_FIO>", document.MainFio},
                     { "<GROUP>", document.Group},
+                    { "<TYPE_OF_PUBLICATION>", $"{document.TypeOfPublication}: " },
                     { "<NAME_OF_PUBLICATION>", document.NameOfPublication },
                     { "<PLACE>", document.Place},
                     { "<AUTHORS>", document.Authors }

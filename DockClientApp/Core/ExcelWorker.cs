@@ -31,6 +31,7 @@ namespace DockClientApp.Core
                 "Год",
                 "Направление",
                 "Авторы",
+                "Тип публикации",
                 "Название публикации",
                 "Дата публикации",
                 "Место",
@@ -68,7 +69,7 @@ namespace DockClientApp.Core
 
             for (int row = 0; row < docs.Count + 1; row++)
             {
-                for (int col = 0; col <= 9 ; col++)
+                for (int col = 0; col <= 10 ; col++)
                 {
                     Cell cell;
 
@@ -103,6 +104,8 @@ namespace DockClientApp.Core
                             case 8:
                                 cell.PutValue(_nameOfColumn[col]); break;
                             case 9:
+                                cell.PutValue(_nameOfColumn[col]); break;
+                            case 10:
                                 cell.PutValue(_nameOfColumn[col]); break;
                             default:
                                 break;
@@ -177,16 +180,18 @@ namespace DockClientApp.Core
                             case 3:
                                 cell.PutValue(doc.Authors); break;
                             case 4:
-                                cell.PutValue(doc.NameOfPublication); break;
+                                cell.PutValue(doc.TypeOfPublication); break;
                             case 5:
-                                cell.PutValue(doc.DateOfPublication); break;
+                                cell.PutValue(doc.NameOfPublication); break;
                             case 6:
-                                cell.PutValue(doc.Place); break;
+                                cell.PutValue(doc.DateOfPublication); break;
                             case 7:
-                                cell.PutValue($"{doc.MainFio} - {doc.Post}"); break;
+                                cell.PutValue(doc.Place); break;
                             case 8:
-                                cell.PutValue(doc.Group); break;
+                                cell.PutValue($"{doc.MainFio} - {doc.Post}"); break;
                             case 9:
+                                cell.PutValue(doc.Group); break;
+                            case 10:
                                 cell.PutValue(doc.Period); break;
                             default:
                                 break;
@@ -328,6 +333,7 @@ namespace DockClientApp.Core
                                     WorkDirection = document.WorkDirection,
                                     DateOfPublication = iff.DateOfPublication,
                                     NameOfDirection = iff.NameOfDirection,
+                                    TypeOfPublication = iff.TypeOfPublication,
                                     NameOfPublication = iff.NameOfPublication,
                                     Place = iff.Place,
                                     Authors = iff.Authors,
@@ -352,6 +358,7 @@ namespace DockClientApp.Core
                                     WorkDirection = document.WorkDirection,
                                     DateOfPublication = est.DateOfPublication,
                                     NameOfDirection = est.NameOfDirection,
+                                    TypeOfPublication = est.TypeOfPublication,
                                     NameOfPublication = est.NameOfPublication,
                                     Place = est.Place,
                                     Authors = est.Authors,
@@ -375,6 +382,7 @@ namespace DockClientApp.Core
                                     WorkDirection = document.WorkDirection,
                                     DateOfPublication = fam.DateOfPublication,
                                     NameOfDirection = fam.NameOfDirection,
+                                    TypeOfPublication = fam.TypeOfPublication,
                                     NameOfPublication = fam.NameOfPublication,
                                     Place = fam.Place,
                                     Authors = fam.Authors,
@@ -406,6 +414,7 @@ namespace DockClientApp.Core
                                     Period = document.Period,
                                     WorkDirection = document.WorkDirection,
                                     DateOfPublication = est.DateOfPublication,
+                                    TypeOfPublication = est.TypeOfPublication,
                                     NameOfDirection = est.NameOfDirection,
                                     NameOfPublication = est.NameOfPublication,
                                     Place = est.Place,
@@ -438,6 +447,7 @@ namespace DockClientApp.Core
                                     WorkDirection = document.WorkDirection,
                                     DateOfPublication = fam.DateOfPublication,
                                     NameOfDirection = fam.NameOfDirection,
+                                    TypeOfPublication= fam.TypeOfPublication,
                                     NameOfPublication = fam.NameOfPublication,
                                     Place = fam.Place,
                                     Authors = fam.Authors,
@@ -468,6 +478,7 @@ namespace DockClientApp.Core
                                     WorkDirection = document.WorkDirection,
                                     DateOfPublication = iff.DateOfPublication,
                                     NameOfDirection = iff.NameOfDirection,
+                                    TypeOfPublication = iff.TypeOfPublication,
                                     NameOfPublication = iff.NameOfPublication,
                                     Place = iff.Place,
                                     Authors = iff.Authors,
@@ -537,6 +548,7 @@ namespace DockClientApp.Core
                         document = new();
 
                         document.Year = worksheet.Name;
+                        document.TypeOfPublication = "Конференция";
 
                         foreach (var col in columnList)
                         {
@@ -546,7 +558,7 @@ namespace DockClientApp.Core
                                     document.NameOfPublication = worksheet.Cells[row, col.Key].StringValue;
                                     break;
                                 case "Ф.И.О.":
-                                    document.Authors = worksheet.Cells[row, col.Key].StringValue;
+                                        document.Authors = $"Автор: {worksheet.Cells[row, col.Key].StringValue}";
                                     break;
                                 case "Дата начала проведения":
                                     document.DateOfPublication += $"{worksheet.Cells[row, col.Key].StringValue} - ";
@@ -564,7 +576,7 @@ namespace DockClientApp.Core
 
                         document.NameOfDirection = name;
 
-                        if (!string.IsNullOrEmpty(document.Authors.Split(";")[0]))
+                        if (!string.IsNullOrEmpty(document.Authors.Split(";")[0].Replace("Автор: ", "")))
                         {
                             middleList.Add(document);
                         }
@@ -607,6 +619,7 @@ namespace DockClientApp.Core
                         document = new();
 
                         document.Year = worksheet.Name;
+                        document.TypeOfPublication = "Статья";
 
                         foreach (var col in columnList)
                         {
@@ -616,7 +629,7 @@ namespace DockClientApp.Core
                                     document.NameOfPublication = worksheet.Cells[row, col.Key].StringValue;
                                     break;
                                 case "Ф.И.О.":
-                                    document.Authors += $"{worksheet.Cells[row, col.Key].StringValue}; ";
+                                        document.Authors += $"Автор: {worksheet.Cells[row, col.Key].StringValue}; ";
                                     break;
                                 case "Соавторы":
                                     document.Authors += $"Соавторы: {worksheet.Cells[row, col.Key].StringValue};";
@@ -634,7 +647,7 @@ namespace DockClientApp.Core
 
                         document.NameOfDirection = name;
 
-                        if (!string.IsNullOrEmpty(document.Authors.Split(";")[0]))
+                        if (!string.IsNullOrEmpty(document.Authors.Split(";")[0].Replace("Автор: ", "")))
                         {
                             middleList.Add(document);
                         }
@@ -677,6 +690,7 @@ namespace DockClientApp.Core
                         document = new();
 
                         document.Year = worksheet.Name;
+                        document.TypeOfPublication = "Статья";
 
                         foreach (var col in columnList)
                         {
@@ -686,7 +700,7 @@ namespace DockClientApp.Core
                                     document.NameOfPublication = worksheet.Cells[row, col.Key].StringValue;
                                     break;
                                 case "Ф.И.О.":
-                                    document.Authors += $"{worksheet.Cells[row, col.Key].StringValue}; ";
+                                        document.Authors += $"Автор: {worksheet.Cells[row, col.Key].StringValue}; ";
                                     break;
                                 case "ФИО студента":
                                     document.Authors += $"Студент: {worksheet.Cells[row, col.Key].StringValue}; ";
@@ -704,7 +718,7 @@ namespace DockClientApp.Core
 
                         document.NameOfDirection = name;
 
-                        if (!string.IsNullOrEmpty(document.Authors.Split(";")[0]))
+                        if (!string.IsNullOrEmpty(document.Authors.Split(";")[0].Replace("Автор: ", "")))
                         {
                             middleList.Add(document);
                         }

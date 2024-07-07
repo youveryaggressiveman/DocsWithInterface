@@ -14,6 +14,7 @@ namespace DockClientApp.Model
         public string Period { get; set; }
         public string DateOfPublication { get; set; }
         public string NameOfPublication { get; set; }
+        public string TypeOfPublication { get; set; }
         public string Place { get; set; }
         public string NameOfDirection { get; set; }
         public string WorkDirection { get; set; }
